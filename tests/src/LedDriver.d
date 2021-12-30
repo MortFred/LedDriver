@@ -1,4 +1,4 @@
-test-obj/..//src/helloworld.o: ..//src/helloworld.cpp \
+test-obj/..//src/LedDriver.o: ..//src/LedDriver.cpp \
  /home/morten/cplusplus/cpputest/include/CppUTest/MemoryLeakDetectorNewMacros.h \
  /home/morten/cplusplus/cpputest/include/CppUTest/CppUTestConfig.h \
  /home/morten/cplusplus/cpputest/include/CppUTest/CppUTestGeneratedConfig.h \
