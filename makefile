@@ -1,6 +1,7 @@
 SRC_DIR = ./src
 TEST_DIR = ./tests
 IDIR =./include
+IDIR +=./include/util
 ODIR = $(SRC_DIR)/obj
 LDIR =./lib
 

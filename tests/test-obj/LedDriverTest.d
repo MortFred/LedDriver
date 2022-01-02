@@ -13,7 +13,7 @@ test-obj/./LedDriverTest.o: LedDriverTest.cpp \
  /home/morten/cplusplus/cpputest/include/CppUTest/TestPlugin.h \
  /home/morten/cplusplus/cpputest/include/CppUTest/MemoryLeakWarningPlugin.h \
  /home/morten/cplusplus/cpputest/include/CppUTest/MemoryLeakDetectorNewMacros.h \
- ..//include/LedDriver.h
+ ..//include/LedDriver.h mocks/RuntimeErrorStub.h
 
 /home/morten/cplusplus/cpputest/include/CppUTest/MemoryLeakDetectorNewMacros.h:
 
@@ -44,3 +44,5 @@ test-obj/./LedDriverTest.o: LedDriverTest.cpp \
 /home/morten/cplusplus/cpputest/include/CppUTest/MemoryLeakDetectorNewMacros.h:
 
 ..//include/LedDriver.h:
+
+mocks/RuntimeErrorStub.h:
