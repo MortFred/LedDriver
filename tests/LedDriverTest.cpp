@@ -1,20 +1,21 @@
 #include "CppUTest/TestHarness.h"
 #include "LedDriver.h"
 #include "RuntimeErrorStub.h"
+#include <stdexcept>
 
 
 /*
 LED driver tests:
 
-All LEDs are off after the driver is initialized.
-A single LED can be turned on.
-A single LED can be turned off.
-Multiple LEDs can be turned on/off.
-Turn on all LEDs.
-Turn off all LEDs.
+X All LEDs are off after the driver is initialized.
+X A single LED can be turned on.
+X A single LED can be turned off.
+X Multiple LEDs can be turned on/off.
+X Turn on all LEDs.
+X Turn off all LEDs.
 Query LED state.
 Check boundary values.
-check out-of-bounds values.
+X check out-of-bounds values.
 */ 
 static uint16_t virtualLeds;
 
@@ -57,10 +58,24 @@ TEST(LedDriver, TurnOnMultipleLeds)
    UNSIGNED_LONGS_EQUAL(0x180, virtualLeds);
 }
 
+TEST(LedDriver, TurnOffMultipleLeds)
+{
+   LedDriver_TurnAllOn();
+   LedDriver_TurnOff(8);
+   LedDriver_TurnOff(9);
+   UNSIGNED_LONGS_EQUAL((~0x180)&0xffff, virtualLeds);
+}
+
 TEST(LedDriver, TurnOnAllLeds)
 {
    LedDriver_TurnAllOn();
    UNSIGNED_LONGS_EQUAL(0xffff, virtualLeds);
+}
+
+TEST(LedDriver, TurnOffAllLeds)
+{
+   LedDriver_TurnAllOff();
+   UNSIGNED_LONGS_EQUAL(0, virtualLeds);
 }
 
 TEST(LedDriver, TurnOffAnyLed)
@@ -84,7 +99,7 @@ TEST(LedDriver, UpperAndLowerBounds)
    UNSIGNED_LONGS_EQUAL(0x8001, virtualLeds);
 }
 
-TEST(LedDriver, OutOfBoundsChangesNothing)
+IGNORE_TEST(LedDriver, OutOfBoundsChangesNothing)
 {
    LedDriver_TurnOn(-1);
    LedDriver_TurnOn(0);
@@ -93,7 +108,7 @@ TEST(LedDriver, OutOfBoundsChangesNothing)
    UNSIGNED_LONGS_EQUAL(0, virtualLeds);
 }
 
-TEST(LedDriver, OutOfBoundsTurnOffDoesNoHarm)
+IGNORE_TEST(LedDriver, OutOfBoundsTurnOffDoesNoHarm)
 {
    LedDriver_TurnAllOn();
    LedDriver_TurnOff(-1);
@@ -105,8 +120,28 @@ TEST(LedDriver, OutOfBoundsTurnOffDoesNoHarm)
 
 TEST(LedDriver, OutOfBoundsProducesRuntimeError)
 {
-   LedDriver_TurnOn(-1);
-   STRCMP_EQUAL("LED Driver: out-of-bounds LED",
-                  RuntimeErrorStub_GetLastError());
-   BYTES_EQUAL(-1, RuntimeErrorStub_GetLastParameter());
+   CHECK_THROWS(std::out_of_range, LedDriver_TurnOn(-1));
+   CHECK_THROWS(std::out_of_range, LedDriver_TurnOff(-1));
+}
+
+TEST(LedDriver, IsOn)
+{
+   CHECK_FALSE(LedDriver_IsOn(11));
+   LedDriver_TurnOn(11);
+   CHECK(LedDriver_IsOn(11));
+}
+
+TEST(LedDriver, IsOff)
+{
+   CHECK(LedDriver_IsOff(12));
+   LedDriver_TurnOn(12);
+   CHECK_FALSE(LedDriver_IsOff(12));
+}
+
+TEST(LedDriver, OutOfBoundsLedsAreAlwaysOff)
+{
+   CHECK_FALSE(LedDriver_IsOn(-1));
+   CHECK_FALSE(LedDriver_IsOn(19));
+   CHECK(LedDriver_IsOff(-1));
+   CHECK(LedDriver_IsOff(19));
 }

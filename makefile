@@ -1,18 +1,18 @@
 SRC_DIR = ./src
 TEST_DIR = ./tests
-IDIR =./include
-IDIR +=./include/util
+IDIR = ./include
+# IDIR += include/util
 ODIR = $(SRC_DIR)/obj
 LDIR =./lib
 
 CC=g++
-CPPFLAGS=-I$(IDIR)
+CPPFLAGS=-I$(IDIR) -I$(IDIR)/util
 LIBS=-lm
 
-_DEPS = helloworld.h
+_DEPS = LedDriver.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = helloworld.o 
+_OBJ = LedDriver.o 
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 $(ODIR)/%.o: $(SRC_DIR)/%.cpp $(DEPS)
@@ -24,10 +24,10 @@ test:
 test_clean:
 	make -C $(TEST_DIR) clean
 
-helloworld: $(OBJ)
+LedDriver: $(OBJ)
 	$(CC) -o $@ $^ $(CPPFLAGS) $(LIBS)
 
-all: test helloworld 
+all: test LedDriver 
 
 .PHONY: clean
 
